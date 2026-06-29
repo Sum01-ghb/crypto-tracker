@@ -105,7 +105,10 @@ export const useCoinGeckoWebSocket = ({
     ws.onopen = () => setIsWsReady(true);
     ws.onmessage = handleMessage;
     ws.onclose = () => setIsWsReady(false);
-    ws.onerror = () => setIsWsReady(false);
+    ws.onerror = (error) => {
+      console.error("Websocket error: ", error);
+      setIsWsReady(false);
+    };
 
     return () => ws.close();
   }, []);
@@ -159,7 +162,7 @@ export const useCoinGeckoWebSocket = ({
       });
     });
 
-    const poolAddress = poolId.replace("_", ":");
+    const poolAddress = poolId.replace("_", ":") ?? "";
 
     if (poolAddress) {
       subscribe("OnchainOHLCV", {
