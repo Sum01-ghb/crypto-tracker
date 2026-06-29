@@ -1,12 +1,13 @@
 import { fetcher } from "@/lib/coingecko.actions";
-import DataTable from "@/components/DataTable";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, formatPercentage, formatCurrency } from "@/lib/utils";
+import DataTable from "@/components/DataTable";
 import CoinsPagination from "@/components/CoinsPagination";
 
 const Coins = async ({ searchParams }: NextPageProps) => {
   const { page } = await searchParams;
+
   const currentPage = Number(page) || 1;
   const perPage = 10;
 
@@ -24,10 +25,10 @@ const Coins = async ({ searchParams }: NextPageProps) => {
       header: "Rank",
       cellClassName: "rank-cell",
       cell: (coin) => (
-        <Link href={`/coins/${coin.id}`} aria-label={`View ${coin.name}`}>
+        <>
           #{coin.market_cap_rank}
-        </Link>
-      ),
+          <Link href={`/coins/${coin.id}`} aria-label="View coin" />
+        </>
       ),
     },
     {
@@ -74,6 +75,7 @@ const Coins = async ({ searchParams }: NextPageProps) => {
   ];
 
   const hasMorePages = coinsData.length === perPage;
+
   const estimatedTotalPages =
     currentPage >= 100 ? Math.ceil(currentPage / 100) * 100 + 100 : 100;
 
@@ -88,6 +90,7 @@ const Coins = async ({ searchParams }: NextPageProps) => {
           data={coinsData}
           rowKey={(coin) => coin.id}
         />
+
         <CoinsPagination
           currentPage={currentPage}
           totalPages={estimatedTotalPages}
